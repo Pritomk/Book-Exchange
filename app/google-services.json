@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "339342522564",
+    "project_id": "bookexchange-317216",
+    "storage_bucket": "bookexchange-317216.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339342522564:android:ee3a4604a22be9b6e67191",
+        "android_client_info": {
+          "package_name": "com.example.bookexchange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339342522564-9fjo9qgl4aen9ps44eok0drt8rsp9smv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQYQYdKpCGjipXbSHFHNSr--IuJatTpmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "339342522564-9fjo9qgl4aen9ps44eok0drt8rsp9smv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
