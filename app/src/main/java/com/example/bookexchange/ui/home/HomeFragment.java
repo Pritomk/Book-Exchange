@@ -1,6 +1,7 @@
 package com.example.bookexchange.ui.home;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +18,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.bookexchange.ExchangeActivity;
 import com.example.bookexchange.MainActivity;
+import com.example.bookexchange.ProductActivity;
 import com.example.bookexchange.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +28,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.bookexchange.util.constant.MAPVIEW_BUNDLE_KEY;
 
@@ -37,10 +41,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        homeViewModel =
-//                new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mapView = root.findViewById(R.id.mapView);
+        FloatingActionButton addBtn = root.findViewById(R.id.addBtn);
+        addBtn.setOnClickListener(v->{
+            startActivity(new Intent(getActivity(), ProductActivity.class));
+        });
 
         initGoogleMap(savedInstanceState);
 

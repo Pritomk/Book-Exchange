@@ -1,18 +1,11 @@
 package com.example.bookexchange;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -20,48 +13,56 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.example.bookexchange.ui.BookAdapter;
+import com.example.bookexchange.ui.BookItem;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.bson.Document;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
+import io.realm.mongodb.RealmResultTask;
 import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
+import io.realm.mongodb.mongo.iterable.MongoCursor;
 
 import static com.example.bookexchange.util.constant.appID;
+import static com.example.bookexchange.util.constant.genres;
 
-public class ExchangeActivity extends AppCompatActivity {
+public class ExchangeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     Uri selectedImage;
     ImageView imageView;
@@ -77,6 +78,9 @@ public class ExchangeActivity extends AppCompatActivity {
     User user;
     FusedLocationProviderClient fusedLocationProviderClient;
     double latitude, longitude;
+    Spinner exSpinner;
+    ArrayAdapter<String> arrayAdapter;
+    String selectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +99,7 @@ public class ExchangeActivity extends AppCompatActivity {
         number = findViewById(R.id.number);
         locationText = findViewById(R.id.locationText);
         locationBtn = findViewById(R.id.locationBtn);
+        exSpinner = findViewById(R.id.genreExSpinner);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         storage = FirebaseStorage.getInstance();
@@ -104,7 +109,10 @@ public class ExchangeActivity extends AppCompatActivity {
 
         exchangeButton.setOnClickListener(v->exchangeFunc());
 
+        setGenreSpinner();
+
     }
+
 
     private void exchangeFunc() {
         String bookNameStr = bookName.getText().toString();
@@ -135,6 +143,7 @@ public class ExchangeActivity extends AppCompatActivity {
         document.append("latitude",latitude);
         document.append("longitude",longitude);
         document.append("number",numberStr);
+        document.append("genre",selectedItem);
 
         mongoCollection.insertOne(document).getAsync(result -> {
             if(result.isSuccess())
@@ -306,4 +315,24 @@ public class ExchangeActivity extends AppCompatActivity {
         }
     }
 
+    private void setGenreSpinner() {
+        exSpinner.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) ExchangeActivity.this);
+        arrayAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                genres);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        exSpinner.setAdapter(arrayAdapter);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        selectedItem = genres[position];
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

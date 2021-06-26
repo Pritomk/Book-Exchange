@@ -42,13 +42,25 @@
                 android:layout_marginTop="430dp"
                 android:hint="Edition"
                 android:layout_centerHorizontal="true"/>
-            <EditText
-                android:id="@+id/quality"
+            <LinearLayout
                 android:layout_width="300dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="510dp"
-                android:hint="Quality(1 to 10)"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true">
+                <EditText
+                    android:id="@+id/quality"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:hint="Quality(1 to 10)"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="50"/>
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/genreExSpinner"
+                    android:layout_weight="50"/>
+            </LinearLayout>
+
             <EditText
                 android:id="@+id/wantedBook"
                 android:layout_width="300dp"

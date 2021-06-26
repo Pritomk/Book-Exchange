@@ -2,50 +2,35 @@ package com.example.bookexchange;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Menu;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bookexchange.ui.Book;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
-import org.bson.types.ObjectId;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import io.realm.Realm;
 import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
-import io.realm.mongodb.Credentials;
 import io.realm.mongodb.User;
-import io.realm.mongodb.mongo.MongoClient;
-import io.realm.mongodb.mongo.MongoCollection;
-import io.realm.mongodb.mongo.MongoDatabase;
 
 import static com.example.bookexchange.util.constant.appID;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+import static com.example.bookexchange.util.constant.genres;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -54,9 +39,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Toolbar toolbar;
     DrawerLayout drawer;
     NavigationView navigationView;
-    Spinner spinner;
-    ArrayAdapter<String> arrayAdapter;
-    String[] genres = {"Action","Crime","Suspense","Story"};
+    Spinner mainSpinner,genreSpinnerList;
+    ArrayAdapter<String> arrayAdapterHome;
     private final String TAG = "userdata";
     FloatingActionButton addBtn;
     Button signOutBtn;
@@ -66,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Realm.init(this);
+        Realm.init(getApplicationContext());
 
         //If not logged in the redirect to login activity
         app = new App(new AppConfiguration.Builder(appID).build());
@@ -77,9 +61,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        spinner = findViewById(R.id.spinnerID);
+        mainSpinner = findViewById(R.id.spinnerID);
         addBtn = findViewById(R.id.addBtn);
         signOutBtn = findViewById(R.id.signOutBtn);
+        genreSpinnerList = findViewById(R.id.genreSpinnerList);
 
         addBtn.setOnClickListener(v->{
             startActivity(new Intent(MainActivity.this,ExchangeActivity.class));
@@ -100,8 +85,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         NavigationUI.setupWithNavController(navigationView, navController);
 
         // Call spinner method
-        setSpinner();
-
+        setSpinnerHome();
     }
 
     private void gotoLogin() {
@@ -158,26 +142,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     // Add spinner
-    private void setSpinner() {
-        spinner.setOnItemSelectedListener(MainActivity.this);
-        arrayAdapter = new ArrayAdapter<>(
+    private void setSpinnerHome() {
+        mainSpinner.setOnItemSelectedListener(MainActivity.this);
+        arrayAdapterHome = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_item,
                 genres);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapterHome.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinner.setAdapter(arrayAdapter);
+        mainSpinner.setAdapter(arrayAdapterHome);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        Toast.makeText(MainActivity.this,genres[position],Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
 
 }

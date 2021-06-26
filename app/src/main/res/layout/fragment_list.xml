@@ -5,38 +5,44 @@
     android:layout_height="match_parent"
     tools:context=".ui.list.ListFragment">
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="300dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
-        android:hint="Email"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginEnd="20dp"
+        android:id="@+id/linearLayout">
+        <Spinner
+            android:id="@+id/genreSpinnerList"
+            android:layout_height="50dp"
+            android:layout_width="160dp"
+            android:layout_weight="0.33"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"/>
+        <Button
+            android:id="@+id/applyBtnList"
+            android:layout_weight="0.33"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Apply"/>
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="300dp"
-        android:hint="Password"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linearLayout">
 
-    <Button
-        android:id="@+id/insertBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:text="Insert"
-        android:layout_centerHorizontal="true"
-        android:textSize="22sp"
-        android:layout_marginTop="400dp"/>
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:layout_marginTop="100dp"
-        android:text="example"
-        android:layout_centerHorizontal="true"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recyclerView"/>
+    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -21,7 +21,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.example.bookexchange.permission.MAPS_RECEIVE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +30,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BookExchange">
-        <activity android:name=".ExchangeActivity"></activity>
+        <activity android:name=".ProductActivity"></activity>
+        <activity android:name=".ExchangeActivity" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".MainActivity"
