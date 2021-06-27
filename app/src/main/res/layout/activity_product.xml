@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.list.ListFragment">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <ImageView
+                android:id="@+id/imageViewList"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/add_icon"/>
+
+            <TextView
+                android:id="@+id/bookNameList"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="270dp"
+                android:hint="Book Name"
+                android:layout_centerHorizontal="true"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/authorNameList"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="350dp"
+                android:hint="Author Name"
+                android:layout_centerHorizontal="true"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/bookEditionList"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="430dp"
+                android:hint="Edition"
+                android:textSize="20sp"
+                android:layout_centerHorizontal="true"/>
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="510dp"
+                android:layout_centerHorizontal="true">
+                <TextView
+                    android:id="@+id/qualityList"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:hint="Quality(1 to 10)"
+                    android:textSize="20sp"
+                    android:layout_weight="50"/>
+                <TextView
+                    android:id="@+id/genreSellList"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:hint="Genre"
+                    android:textSize="20sp"
+                    android:layout_weight="50"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/wantedBookList"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="590dp"
+                android:textSize="25sp"
+                android:hint="Wanted Book Name"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/wantedBookAuthorList"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="670dp"
+                android:textSize="20sp"
+                android:hint="Wanted Book Author"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/priceList"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="750dp"
+                android:hint="Price"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/locationTextList"
+                android:layout_width="300dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="60dp"
+                android:layout_marginTop="830dp"
+                android:text="Location"
+                android:textSize="20sp"
+                android:layout_weight="70"/>
+
+            <TextView
+                android:id="@+id/numberList"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="910dp"
+                android:hint="Price"
+                android:textSize="20sp"
+                android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
