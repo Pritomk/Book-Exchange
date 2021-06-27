@@ -32,7 +32,7 @@ import io.realm.mongodb.User;
 import static com.example.bookexchange.util.constant.appID;
 import static com.example.bookexchange.util.constant.genres;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private App app;
@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         NavigationUI.setupWithNavController(navigationView, navController);
 
         // Call spinner method
-        setSpinnerHome();
     }
 
     private void gotoLogin() {
@@ -138,29 +137,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-
-    // Add spinner
-    private void setSpinnerHome() {
-        mainSpinner.setOnItemSelectedListener(MainActivity.this);
-        arrayAdapterHome = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                genres);
-        arrayAdapterHome.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        mainSpinner.setAdapter(arrayAdapterHome);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
 }

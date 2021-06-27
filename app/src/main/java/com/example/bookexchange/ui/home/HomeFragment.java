@@ -1,39 +1,31 @@
 package com.example.bookexchange.ui.home;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.bookexchange.ExchangeActivity;
-import com.example.bookexchange.MainActivity;
-import com.example.bookexchange.ProductActivity;
 import com.example.bookexchange.R;
-import com.example.bookexchange.ui.BookItem;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
@@ -46,26 +38,43 @@ import io.realm.mongodb.mongo.iterable.MongoCursor;
 
 import static com.example.bookexchange.util.constant.MAPVIEW_BUNDLE_KEY;
 import static com.example.bookexchange.util.constant.appID;
+import static com.example.bookexchange.util.constant.genres;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback {
+public class HomeFragment extends Fragment implements OnMapReadyCallback, AdapterView.OnItemSelectedListener {
 
-
-    private HomeViewModel homeViewModel;
+    String selectedItem;
     MapView mapView;
     GoogleMap mMap;
+    Spinner homeGenreSpinner;
+    Button applyButton;
+    Document document = new Document();
+    ArrayAdapter<String> arrayAdapter;
+    List<Marker> allMarkers = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mapView = root.findViewById(R.id.mapView);
-        FloatingActionButton addBtn = root.findViewById(R.id.addBtn);
-        addBtn.setOnClickListener(v->{
-            startActivity(new Intent(getActivity(), ProductActivity.class));
-        });
-
+        homeGenreSpinner = root.findViewById(R.id.spinnerID);
+        applyButton = root.findViewById(R.id.applyBtn);
+        document = new Document();
+        setGenreSpinnerFunc();
         initGoogleMap(savedInstanceState);
 
+        applyButton.setOnClickListener(v->applyGenreFunc());
+
         return root;
+    }
+
+    private void applyGenreFunc() {
+        removeAllMarkers();
+        document.clear();
+        if (selectedItem.equals("All")) {
+            document = new Document();
+        } else {
+            document.put("genre",selectedItem);
+        }
+        loadData();
     }
 
     private void initGoogleMap(Bundle savedInstanceState) {
@@ -137,7 +146,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private void loadData() {
         App app = new App(new AppConfiguration.Builder(appID).build());
         User user = app.currentUser();
-        Document document = new Document();
         MongoClient mongoClient = user.getMongoClient("mongodb-atlas");
         MongoDatabase mongoDatabase = mongoClient.getDatabase("ProductData");
         MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("TestData");
@@ -153,7 +161,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 String lat = result.get("latitude").toString();
                 String lng = result.get("longitude").toString();
                 String bookName = result.get("bookName").toString();
-                mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(lat),Double.parseDouble(lng))).title(bookName));
+                Marker mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(lat),Double.parseDouble(lng))).title(bookName));
+                allMarkers.add(mMarker);
             }
         } else {
             Log.e("userdata", "failed to find documents with: ", task.getError());
@@ -161,4 +170,28 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    private void removeAllMarkers() {
+        for (Marker marker : allMarkers) {
+            marker.remove();
+        }
+        allMarkers.clear();
+    }
+
+    private void setGenreSpinnerFunc() {
+        homeGenreSpinner.setOnItemSelectedListener(this);
+        arrayAdapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item,genres);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        homeGenreSpinner.setAdapter(arrayAdapter);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        selectedItem = genres[position];
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
