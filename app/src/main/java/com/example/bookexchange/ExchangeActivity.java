@@ -59,16 +59,12 @@ import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
 import io.realm.mongodb.mongo.iterable.MongoCursor;
 
-import static com.example.bookexchange.util.constant.appID;
-import static com.example.bookexchange.util.constant.genres;
+import static com.example.bookexchange.util.constant.*;
 
 public class ExchangeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     Uri selectedImage;
     ImageView imageView;
-    public int CAMERA_PERMISSION_CODE = 100;
-    public int READ_PERMISSION_CODE = 101;
-    public int LOCATION_PERMISSION_CODE = 102;
     EditText bookName,authorName,bookEdition,quality,price,wantedBook,wantedBookAuthor,number;
     TextView locationText;
     Button exchangeButton,locationBtn;
