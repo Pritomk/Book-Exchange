@@ -14,4 +14,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_book_list">Book List</string>
+    <string name="my_ads_str">My Ads</string>
+    <string name="my_ads">My Ads</string>
 </resources>

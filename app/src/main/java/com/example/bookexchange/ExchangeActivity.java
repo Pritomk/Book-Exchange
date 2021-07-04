@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,12 +30,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.bookexchange.ui.BookAdapter;
-import com.example.bookexchange.ui.BookItem;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -44,9 +41,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -77,11 +75,20 @@ public class ExchangeActivity extends AppCompatActivity implements AdapterView.O
     Spinner exSpinner;
     ArrayAdapter<String> arrayAdapter;
     String selectedItem;
+    boolean fromProduct;
+    MongoClient mongoClient;
+    MongoDatabase mongoDatabase;
+    MongoCollection<Document> mongoCollection;
+    String objID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange);
+
+        Intent intent = getIntent();
+        fromProduct = intent.getBooleanExtra("boolean",false);
+        objID = intent.getStringExtra("_id");
 
         imageView = findViewById(R.id.imageView);
         bookName = findViewById(R.id.bookName);
@@ -100,13 +107,61 @@ public class ExchangeActivity extends AppCompatActivity implements AdapterView.O
 
         storage = FirebaseStorage.getInstance();
 
+        app = new App(new AppConfiguration.Builder(appID).build());
+        user = app.currentUser();
+        mongoClient = user.getMongoClient("mongodb-atlas");
+        mongoDatabase = mongoClient.getDatabase("ProductData");
+        mongoCollection = mongoDatabase.getCollection("TestData");
+
         locationBtn.setOnClickListener(v->getLastLocation());
         imageView.setOnClickListener(v->clickpic());
-
-        exchangeButton.setOnClickListener(v->exchangeFunc());
+        if (!fromProduct) {
+            exchangeButton.setOnClickListener(v->exchangeFunc());
+        } else {
+            loadData();
+            exchangeButton.setOnClickListener(v->updateFunc());
+        }
 
         setGenreSpinner();
 
+    }
+
+    private void updateFunc() {
+        String bookNameStr = bookName.getText().toString();
+        String authorNameStr = authorName.getText().toString();
+        String bookEditionStr = bookEdition.getText().toString();
+        String qualityStr = quality.getText().toString();
+        String priceStr = price.getText().toString();
+        String wantedBookStr = wantedBook.getText().toString();
+        String wantedBookAuthorStr = wantedBookAuthor.getText().toString();
+        String locationTextStr = locationText.getText().toString();
+        String numberStr = number.getText().toString();
+
+        Document queryFilter = new Document("userid",user.getId());
+        Document document = new Document();
+        document.put("userid",user.getId());
+        document.put("bookName",bookNameStr);
+        document.put("authorName",authorNameStr);
+        document.put("bookEdition",bookEditionStr);
+        document.put("quality",qualityStr);
+        document.put("price",priceStr);
+        document.put("wantedBook",wantedBookStr);
+        document.put("wantedBookAuthor",wantedBookAuthorStr);
+        document.put("locationText",locationTextStr);
+        document.put("latitude", String.valueOf(latitude));
+        document.put("longitude", String.valueOf(longitude));
+        document.put("number",numberStr);
+        document.put("genre",selectedItem);
+
+        mongoCollection.updateOne(queryFilter,document).getAsync(result -> {
+            if (result.isSuccess()) {
+                Toast.makeText(this,"Success",Toast.LENGTH_SHORT).show();
+                Log.e("userdata","success");
+            } else {
+                Toast.makeText(this,"Failed",Toast.LENGTH_SHORT).show();
+                Log.e("userdata","success");
+            }
+        });
     }
 
 
@@ -120,12 +175,6 @@ public class ExchangeActivity extends AppCompatActivity implements AdapterView.O
         String wantedBookAuthorStr = wantedBookAuthor.getText().toString();
         String locationTextStr = locationText.getText().toString();
         String numberStr = number.getText().toString();
-
-        app = new App(new AppConfiguration.Builder(appID).build());
-        user = app.currentUser();
-        MongoClient mongoClient = user.getMongoClient("mongodb-atlas");
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("ProductData");
-        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("TestData");
 
         Document document = new Document("userid",user.getId());
         document.append("bookName",bookNameStr);
@@ -153,6 +202,39 @@ public class ExchangeActivity extends AppCompatActivity implements AdapterView.O
         });
 
         uploadImage();
+    }
+
+    private void loadData() {
+        Document queryFilter  = new Document("_id",new ObjectId(objID));
+        RealmResultTask<MongoCursor<Document>> findTask = mongoCollection.find(queryFilter).iterator();
+
+        findTask.getAsync(this::findTaskFunc);
+    }
+
+    private void findTaskFunc(App.Result<MongoCursor<Document>> result) {
+        if (result.isSuccess()) {
+            Log.e("newdata", "execute");
+            MongoCursor<Document> cursor = result.get();
+            if (cursor.hasNext()) {
+                Document document = cursor.next();
+                setTextView(document);
+                Log.e("newdata",document.toString()+"  "+objID);
+            }
+        }
+    }
+
+    private void setTextView(Document document) {
+        bookName.setText(document.get("bookName").toString());
+        authorName.setText(document.get("authorName").toString());
+        bookEdition.setText(document.get("bookEdition").toString());
+        quality.setText(document.get("quality").toString());
+        wantedBook.setText(document.get("wantedBook").toString());
+        wantedBookAuthor.setText(document.get("wantedBookAuthor").toString());
+        price.setText(document.get("price").toString());
+        locationText.setText(document.get("locationText").toString());
+        number.setText(document.get("number").toString());
+
+        exchangeButton.setText("Update");
     }
 
     private void clickpic() {
@@ -304,7 +386,6 @@ public class ExchangeActivity extends AppCompatActivity implements AdapterView.O
             String address = "";
             address += list.get(0).getAddressLine(0);
             Log.e("address",list+"");
-//            address += list.get(1);
             locationText.setText(address);
         } catch (IOException e) {
             e.printStackTrace();

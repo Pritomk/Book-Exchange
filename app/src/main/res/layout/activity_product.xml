@@ -12,6 +12,14 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:id="@+id/editButton"
+                android:layout_alignParentEnd="true"
+                android:text="Edit"
+                android:textSize="20sp"/>
+
             <ImageView
                 android:id="@+id/imageViewList"
                 android:layout_width="200dp"

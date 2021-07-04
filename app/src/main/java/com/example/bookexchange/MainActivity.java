@@ -12,17 +12,23 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.bookexchange.ui.home.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+
+import org.jetbrains.annotations.NotNull;
 
 import io.realm.Realm;
 import io.realm.mongodb.App;
@@ -66,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         signOutBtn = findViewById(R.id.signOutBtn);
         genreSpinnerList = findViewById(R.id.genreSpinnerList);
 
+//        setToolBar();
+
         addBtn.setOnClickListener(v->{
             startActivity(new Intent(MainActivity.this,ExchangeActivity.class));
         });
@@ -73,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         signOutBtn.setOnClickListener(v->signOut());
 
         setSupportActionBar(toolbar);
+
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -128,6 +137,18 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.searchView).setOnActionExpandListener(onActionExpandListener);
         SearchView searchView = (SearchView) menu.findItem(R.id.searchView).getActionView();
         searchView.setQueryHint("Search Here");
+
+        MenuItem.OnMenuItemClickListener onMenuItemClickListener = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.myAdItem) {
+                    startActivity(new Intent(getApplicationContext(),MyAdActivity.class));
+                }
+                return true;
+            }
+        };
+
+        menu.findItem(R.id.myAdItem).setOnMenuItemClickListener(onMenuItemClickListener);
 
         return true;
     }

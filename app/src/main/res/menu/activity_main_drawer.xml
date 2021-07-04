@@ -13,5 +13,6 @@
             android:id="@+id/nav_list"
             android:icon="@drawable/ic_round_format_list_bulleted_24"
             android:title="@string/menu_book_list" />
+
     </group>
 </menu>
