@@ -8,5 +8,9 @@
         android:id="@+id/searchView"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+        android:id="@+id/myAdItem"
+        android:icon="@drawable/ic_baseline_format_align_left_24"
+        android:title="@string/my_ads_str"/>
 
 </menu>

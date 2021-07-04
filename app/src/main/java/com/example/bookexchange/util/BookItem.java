@@ -1,4 +1,4 @@
-package com.example.bookexchange.ui;
+package com.example.bookexchange.util;
 
 import org.bson.types.ObjectId;
 
@@ -36,5 +36,10 @@ public class BookItem {
         this._id = _id;
         this.bookName = bookName;
         this.price = price;
+    }
+
+    public BookItem(String _id, String bookName) {
+        this._id = _id;
+        this.bookName = bookName;
     }
 }

@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bookexchange.ProductActivity;
 import com.example.bookexchange.R;
 import com.example.bookexchange.ui.BookAdapter;
-import com.example.bookexchange.ui.BookItem;
+import com.example.bookexchange.util.BookItem;
 
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
@@ -146,6 +146,7 @@ public class ListFragment extends Fragment implements AdapterView.OnItemSelected
             bookAdapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent(getActivity(), ProductActivity.class);
                 intent.putExtra("_id",bookItems.get(position).get_id());
+                intent.putExtra("boolean","false");
                 startActivity(intent);
             });
         }

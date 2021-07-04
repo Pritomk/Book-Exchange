@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,11 +29,12 @@ import static com.example.bookexchange.util.constant.appID;
 public class ProductActivity extends AppCompatActivity {
 
     Intent intent;
-    String objID;
+    String objID,fromAd;
     App app;
     ImageView imageViewList;
     TextView bookNameList,authorNameList,bookEditionList,qualityList,genreSellList,
         wantedBookList,wantedBookAuthorList,priceList,locationTextList,numberList;
+    Button editButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class ProductActivity extends AppCompatActivity {
 
         intent = getIntent();
         objID = intent.getStringExtra("_id");
+        fromAd = intent.getStringExtra("boolean");
 
         imageViewList = findViewById(R.id.imageViewList);
         bookNameList = findViewById(R.id.bookNameList);
@@ -52,6 +56,11 @@ public class ProductActivity extends AppCompatActivity {
         priceList = findViewById(R.id.priceList);
         locationTextList = findViewById(R.id.locationTextList);
         numberList = findViewById(R.id.numberList);
+        editButton = findViewById(R.id.editButton);
+
+        if (!fromAd.equals("true")) editButton.setVisibility(View.GONE);
+
+        editButton.setOnClickListener(v->goToExchangeActivity());
 
         app = new App(new AppConfiguration.Builder(appID).build());
         User user = app.currentUser();
@@ -74,6 +83,10 @@ public class ProductActivity extends AppCompatActivity {
                 Log.e("newdata",document.toString()+"  "+objID);
             }
         }
+    }
+
+    private void goToExchangeActivity() {
+        startActivity(new Intent(this,ExchangeActivity.class).putExtra("boolean",true).putExtra("_id",objID));
     }
 
     private void setTextView(Document document) {

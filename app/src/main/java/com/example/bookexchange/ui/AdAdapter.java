@@ -15,12 +15,12 @@ import com.example.bookexchange.util.BookItem;
 
 import java.util.ArrayList;
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
-    ArrayList<BookItem> bookItems;
+public class AdAdapter extends RecyclerView.Adapter<AdAdapter.AdViewHolder> {
+
+    ArrayList<BookItem> adItems;
     Context context;
 
     private OnItemClickListener onItemClickListener;
-
 
     public interface OnItemClickListener {
         void onClick(int position);
@@ -30,18 +30,16 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         this.onItemClickListener = onItemClickListener;
     }
 
-    public BookAdapter(Context context,ArrayList<BookItem> bookItems) {
+    public AdAdapter(Context context, ArrayList<BookItem> adItems) {
         this.context = context;
-        this.bookItems = bookItems;
+        this.adItems = adItems;
     }
 
-    public static class BookViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
-        TextView bookNameCI;
-        TextView priceCI;
-        public BookViewHolder(@NonNull View itemView,OnItemClickListener onItemClickListener) {
+    public static class AdViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+        TextView bookNameAd;
+        public AdViewHolder(@NonNull View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
-            bookNameCI = itemView.findViewById(R.id.bookNameCI);
-            priceCI = itemView.findViewById(R.id.priceCI);
+            bookNameAd = itemView.findViewById(R.id.bookNameAd);
 
             itemView.setOnClickListener(v->onItemClickListener.onClick(getAdapterPosition()));
             itemView.setOnCreateContextMenuListener(this);
@@ -49,25 +47,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-
+            menu.add(getAdapterPosition(),0,0,"Delete");
         }
     }
     @NonNull
     @Override
-    public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_item,parent,false);
-        return new BookViewHolder(itemView,onItemClickListener);
+    public AdAdapter.AdViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ad_item,parent,false);
+        return new AdAdapter.AdViewHolder(itemView,onItemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-        holder.bookNameCI.setText(bookItems.get(position).getBookName());
-        holder.priceCI.setText(bookItems.get(position).getPrice());
+    public void onBindViewHolder(@NonNull AdViewHolder holder, int position) {
+        holder.bookNameAd.setText(adItems.get(position).getBookName());
     }
 
     @Override
     public int getItemCount() {
-        return bookItems.size();
+        return adItems.size();
     }
 
 }
